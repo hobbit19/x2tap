@@ -774,8 +774,8 @@ namespace SimpleJSON
 
     public class JSONArray : JSONNode
     {
-        private bool inline;
         private readonly List<JSONNode> m_List = new List<JSONNode>();
+        private bool inline;
 
         public override bool Inline
         {
@@ -882,8 +882,8 @@ namespace SimpleJSON
 
     public class JSONObject : JSONNode
     {
-        private bool inline;
         private readonly Dictionary<string, JSONNode> m_Dict = new Dictionary<string, JSONNode>();
+        private bool inline;
 
         public override bool Inline
         {

@@ -13,6 +13,7 @@ namespace x2tap.View
 
         private void AdvancedForm_Load(object sender, EventArgs e)
         {
+            v2rayLoggingLevelComboBox.SelectedIndex = Global.Config.v2rayLoggingLevel;
         }
 
         private void AdvancedForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -42,8 +43,13 @@ namespace x2tap.View
             }
         }
 
-        private void v2rayLoggingLevelComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void ControlButton_Click(object sender, EventArgs e)
         {
+            Global.Config.v2rayLoggingLevel = v2rayLoggingLevelComboBox.SelectedIndex;
+
+            MessageBox.Show("保存成功", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Global.Views.MainForm.Show();
+            Close();
         }
     }
 }

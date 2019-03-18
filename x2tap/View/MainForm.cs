@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Grpc.Core;
 using v2ray.Core.App.Stats.Command;
-using x2tap.Objects.Server;
 using x2tap.Utils;
+using x2tap.View.Server;
 
 namespace x2tap.View
 {
@@ -37,24 +37,21 @@ namespace x2tap.View
         /// </summary>
         public void InitProxies()
         {
+            // 先清空掉内容
             ProxyComboBox.Items.Clear();
+            // 添加 v2ray 代理
             foreach (var v2ray in Global.v2rayProxies) ProxyComboBox.Items.Add(string.Format("[v2ray] {0}", v2ray.Remark));
+            // 添加 Shadowsocks 代理
             foreach (var shadowsocks in Global.ShadowsocksProxies) ProxyComboBox.Items.Add(string.Format("[Shadowsocks] {0}", shadowsocks.Remark));
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // 初始化配置
+            Config.InitFromFile();
+
+            // 检查 TUN/TAP 适配器
             if (TUNTAP.GetComponentId() == "") MessageBox.Show("未检测到 TUN/TAP 适配器，请检查 TAP-Windows 是否正确安装！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-            Global.v2rayProxies.Add(new Objects.Server.v2ray
-            {
-                Remark = "百度为您提供强力加速 1234"
-            });
-
-            Global.ShadowsocksProxies.Add(new Shadowsocks
-            {
-                Remark = "百度为您提供强力加速 1234"
-            });
 
             // 初始化代理
             InitProxies();
@@ -123,6 +120,10 @@ namespace x2tap.View
 
                 MessageBox.Show("请先点击关闭按钮", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            else
+            {
+                Config.SaveToFile();
+            }
         }
 
         private void ComboBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -155,7 +156,7 @@ namespace x2tap.View
 
         private void AddShadowsocksButton_Click(object sender, EventArgs e)
         {
-            (Global.Views.Server.Shadowsocks = new Server.Shadowsocks()).Show();
+            (Global.Views.Server.Shadowsocks = new Shadowsocks()).Show();
             Hide();
         }
 
@@ -191,7 +192,7 @@ namespace x2tap.View
                 if (ProxyComboBox.SelectedIndex < Global.v2rayProxies.Count)
                     (Global.Views.Server.v2ray = new Server.v2ray(true, ProxyComboBox.SelectedIndex)).Show();
                 else
-                    (Global.Views.Server.Shadowsocks = new Server.Shadowsocks(true, ProxyComboBox.SelectedIndex - Global.v2rayProxies.Count)).Show();
+                    (Global.Views.Server.Shadowsocks = new Shadowsocks(true, ProxyComboBox.SelectedIndex - Global.v2rayProxies.Count)).Show();
 
                 Hide();
             }

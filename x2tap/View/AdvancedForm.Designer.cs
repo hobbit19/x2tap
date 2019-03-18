@@ -30,6 +30,7 @@
         {
             this.v2rayLoggingLevelGroupBox = new System.Windows.Forms.GroupBox();
             this.v2rayLoggingLevelComboBox = new System.Windows.Forms.ComboBox();
+            this.ControlButton = new System.Windows.Forms.Button();
             this.v2rayLoggingLevelGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,13 +60,23 @@
             this.v2rayLoggingLevelComboBox.Size = new System.Drawing.Size(351, 24);
             this.v2rayLoggingLevelComboBox.TabIndex = 0;
             this.v2rayLoggingLevelComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ComboBox_DrawItem);
-            this.v2rayLoggingLevelComboBox.SelectedIndexChanged += new System.EventHandler(this.v2rayLoggingLevelComboBox_SelectedIndexChanged);
+            // 
+            // ControlButton
+            // 
+            this.ControlButton.Location = new System.Drawing.Point(300, 74);
+            this.ControlButton.Name = "ControlButton";
+            this.ControlButton.Size = new System.Drawing.Size(75, 23);
+            this.ControlButton.TabIndex = 1;
+            this.ControlButton.Text = "保存";
+            this.ControlButton.UseVisualStyleBackColor = true;
+            this.ControlButton.Click += new System.EventHandler(this.ControlButton_Click);
             // 
             // AdvancedForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(387, 79);
+            this.ClientSize = new System.Drawing.Size(387, 108);
+            this.Controls.Add(this.ControlButton);
             this.Controls.Add(this.v2rayLoggingLevelGroupBox);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -84,5 +95,6 @@
 
         private System.Windows.Forms.GroupBox v2rayLoggingLevelGroupBox;
         private System.Windows.Forms.ComboBox v2rayLoggingLevelComboBox;
+        private System.Windows.Forms.Button ControlButton;
     }
 }
