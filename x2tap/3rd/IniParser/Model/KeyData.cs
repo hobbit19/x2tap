@@ -32,7 +32,9 @@ namespace IniParser.Model
         public KeyData(string keyName)
         {
             if (string.IsNullOrEmpty(keyName))
+            {
                 throw new ArgumentException("key name can not be empty");
+            }
 
             _comments = new List<string>();
             Value = string.Empty;
@@ -85,7 +87,9 @@ namespace IniParser.Model
             set
             {
                 if (value != string.Empty)
+                {
                     _keyName = value;
+                }
             }
         }
 

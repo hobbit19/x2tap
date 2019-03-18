@@ -41,7 +41,9 @@ namespace IniParser.Model
             _searchComparer = searchComparer;
 
             if (string.IsNullOrEmpty(sectionName))
+            {
                 throw new ArgumentException("section name can not be empty");
+            }
 
             Comments = new List<string>();
             Keys = new KeyDataCollection(_searchComparer);
@@ -106,12 +108,16 @@ namespace IniParser.Model
         public void Merge(SectionData toMergeSection)
         {
             foreach (var comment in toMergeSection.LeadingComments)
+            {
                 LeadingComments.Add(comment);
+            }
 
             Keys.Merge(toMergeSection.Keys);
 
             foreach (var comment in toMergeSection.TrailingComments)
+            {
                 TrailingComments.Add(comment);
+            }
         }
 
         #endregion
@@ -131,7 +137,9 @@ namespace IniParser.Model
             set
             {
                 if (!string.IsNullOrEmpty(value))
+                {
                     _sectionName = value;
+                }
             }
         }
 

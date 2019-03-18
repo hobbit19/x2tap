@@ -54,7 +54,9 @@ namespace IniParser
         public IniData ReadFile(string filePath, Encoding fileEncoding)
         {
             if (filePath == string.Empty)
+            {
                 throw new ArgumentException("Bad filename.");
+            }
 
             try
             {
@@ -109,13 +111,19 @@ namespace IniParser
             // The default value can't be assigned as a default parameter value because it is not
             // a constant expression.
             if (fileEncoding == null)
+            {
                 fileEncoding = Encoding.UTF8;
+            }
 
             if (string.IsNullOrEmpty(filePath))
+            {
                 throw new ArgumentException("Bad filename.");
+            }
 
             if (parsedData == null)
+            {
                 throw new ArgumentNullException("parsedData");
+            }
 
             using (var fs = File.Open(filePath, FileMode.Create, FileAccess.Write))
             {

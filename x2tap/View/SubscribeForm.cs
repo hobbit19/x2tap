@@ -31,8 +31,12 @@ namespace x2tap.View
                 if (response != "")
                 {
                     if (response.Length % 4 != 0)
+                    {
                         for (var i = 0; i < response.Length % 4; i++)
+                        {
                             response += "=";
+                        }
+                    }
 
                     response = Encoding.UTF8.GetString(Convert.FromBase64String(response));
 
@@ -49,11 +53,17 @@ namespace x2tap.View
                             i++;
 
                             if (text.StartsWith("vmess://"))
+                            {
                                 Global.v2rayProxies.Add(Parse.v2ray(text));
+                            }
                             else if (text.StartsWith("ss://"))
+                            {
                                 Global.ShadowsocksProxies.Add(Parse.Shadowsocks(text));
+                            }
                             else
+                            {
                                 throw new Exception(string.Format("无法解析的地址：{0}", text));
+                            }
                         }
 
                         MessageBox.Show(string.Format("成功导入 {0} 条代理", i), "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -83,11 +93,17 @@ namespace x2tap.View
                         i++;
 
                         if (text.StartsWith("vmess://"))
+                        {
                             Global.v2rayProxies.Add(Parse.v2ray(text));
+                        }
                         else if (text.StartsWith("ss://"))
+                        {
                             Global.ShadowsocksProxies.Add(Parse.Shadowsocks(text));
+                        }
                         else
+                        {
                             throw new Exception(string.Format("无法解析的地址：{0}", text));
+                        }
                     }
 
                     MessageBox.Show(string.Format("成功导入 {0} 条代理", i), "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);

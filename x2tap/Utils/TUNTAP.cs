@@ -18,13 +18,18 @@ namespace x2tap.Utils
             var adaptersRegistry = Registry.LocalMachine.OpenSubKey(ADAPTER_KEY);
 
             foreach (var adapterRegistryName in adaptersRegistry.GetSubKeyNames())
+            {
                 if (adapterRegistryName != "Configuration" && adapterRegistryName != "Properties")
                 {
                     var adapterRegistry = adaptersRegistry.OpenSubKey(adapterRegistryName);
 
                     var adapterComponentId = adapterRegistry.GetValue("ComponentId", "").ToString();
-                    if (adapterComponentId == TUNTAP_COMPONENT_ID_0901 || adapterComponentId == TUNTAP_COMPONENT_ID_0801) return adapterRegistry.GetValue("NetCfgInstanceId", "").ToString();
+                    if (adapterComponentId == TUNTAP_COMPONENT_ID_0901 || adapterComponentId == TUNTAP_COMPONENT_ID_0801)
+                    {
+                        return adapterRegistry.GetValue("NetCfgInstanceId", "").ToString();
+                    }
                 }
+            }
 
             return "";
         }

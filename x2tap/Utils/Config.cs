@@ -15,7 +15,10 @@ namespace x2tap.Utils
         public static void InitFromFile()
         {
             // 检查配置文件是否存在，如果不存在则写入一个默认的配置
-            if (!File.Exists("x2tap.ini")) File.WriteAllBytes("x2tap.ini", Resources.defaultConfig);
+            if (!File.Exists("x2tap.ini"))
+            {
+                File.WriteAllBytes("x2tap.ini", Resources.defaultConfig);
+            }
 
             var parser = new FileIniDataParser();
             var data = parser.ReadFile("x2tap.ini");
@@ -25,8 +28,15 @@ namespace x2tap.Utils
             Global.Config.TUNTAP.Gateway = data["TUNTAP"]["Gateway"];
             Global.Config.TUNTAP.Metric = int.Parse(data["TUNTAP"]["Metric"]);
 
-            if (File.Exists("v2ray.json")) Global.v2rayProxies = JsonConvert.DeserializeObject<List<Objects.Server.v2ray>>(File.ReadAllText("v2ray.json"));
-            if (File.Exists("Shadowsocks.json")) Global.ShadowsocksProxies = JsonConvert.DeserializeObject<List<Shadowsocks>>(File.ReadAllText("Shadowsocks.json"));
+            if (File.Exists("v2ray.json"))
+            {
+                Global.v2rayProxies = JsonConvert.DeserializeObject<List<Objects.Server.v2ray>>(File.ReadAllText("v2ray.json"));
+            }
+
+            if (File.Exists("Shadowsocks.json"))
+            {
+                Global.ShadowsocksProxies = JsonConvert.DeserializeObject<List<Shadowsocks>>(File.ReadAllText("Shadowsocks.json"));
+            }
         }
 
         /// <summary>

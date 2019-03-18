@@ -15,7 +15,10 @@ namespace x2tap.Utils
             double result;
             var i = -1;
 
-            while ((result = (double) bandwidth / 1024) < 1024) i++;
+            while ((result = (double) bandwidth / 1024) < 1024)
+            {
+                i++;
+            }
 
             return string.Format("{0} {1}", Math.Round(result, 2), units[i]);
         }

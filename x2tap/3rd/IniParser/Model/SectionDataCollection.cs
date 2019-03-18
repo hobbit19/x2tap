@@ -46,7 +46,9 @@ namespace IniParser.Model
         public IEnumerator<SectionData> GetEnumerator()
         {
             foreach (var sectionName in _sectionData.Keys)
+            {
                 yield return _sectionData[sectionName];
+            }
         }
 
         #endregion
@@ -105,7 +107,11 @@ namespace IniParser.Model
             _searchComparer = searchComparer ?? EqualityComparer<string>.Default;
 
             _sectionData = new Dictionary<string, SectionData>(_searchComparer);
-            foreach (var sectionData in ori) _sectionData.Add(sectionData.SectionName, (SectionData) sectionData.Clone());
+            foreach (var sectionData in ori)
+            {
+                _sectionData.Add(sectionData.SectionName, (SectionData) sectionData.Clone());
+            }
+
             ;
         }
 
@@ -131,7 +137,9 @@ namespace IniParser.Model
             get
             {
                 if (_sectionData.ContainsKey(sectionName))
+                {
                     return _sectionData[sectionName].Keys;
+                }
 
                 return null;
             }
@@ -175,9 +183,13 @@ namespace IniParser.Model
         public void Add(SectionData data)
         {
             if (ContainsSection(data.SectionName))
+            {
                 SetSectionData(data.SectionName, new SectionData(data, _searchComparer));
+            }
             else
+            {
                 _sectionData.Add(data.SectionName, new SectionData(data, _searchComparer));
+            }
         }
 
         /// <summary>
@@ -213,7 +225,9 @@ namespace IniParser.Model
         public SectionData GetSectionData(string sectionName)
         {
             if (_sectionData.ContainsKey(sectionName))
+            {
                 return _sectionData[sectionName];
+            }
 
             return null;
         }
@@ -224,7 +238,10 @@ namespace IniParser.Model
             {
                 var sectionDataInThis = GetSectionData(sectionDataToMerge.SectionName);
 
-                if (sectionDataInThis == null) AddSection(sectionDataToMerge.SectionName);
+                if (sectionDataInThis == null)
+                {
+                    AddSection(sectionDataToMerge.SectionName);
+                }
 
                 this[sectionDataToMerge.SectionName].Merge(sectionDataToMerge.Keys);
             }
@@ -238,7 +255,9 @@ namespace IniParser.Model
         public void SetSectionData(string sectionName, SectionData data)
         {
             if (data != null)
+            {
                 _sectionData[sectionName] = data;
+            }
         }
 
         /// <summary>

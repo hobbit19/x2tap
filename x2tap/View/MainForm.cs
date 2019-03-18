@@ -40,9 +40,16 @@ namespace x2tap.View
             // 先清空掉内容
             ProxyComboBox.Items.Clear();
             // 添加 v2ray 代理
-            foreach (var v2ray in Global.v2rayProxies) ProxyComboBox.Items.Add(string.Format("[v2ray] {0}", v2ray.Remark));
+            foreach (var v2ray in Global.v2rayProxies)
+            {
+                ProxyComboBox.Items.Add(string.Format("[v2ray] {0}", v2ray.Remark));
+            }
+
             // 添加 Shadowsocks 代理
-            foreach (var shadowsocks in Global.ShadowsocksProxies) ProxyComboBox.Items.Add(string.Format("[Shadowsocks] {0}", shadowsocks.Remark));
+            foreach (var shadowsocks in Global.ShadowsocksProxies)
+            {
+                ProxyComboBox.Items.Add(string.Format("[Shadowsocks] {0}", shadowsocks.Remark));
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -51,11 +58,17 @@ namespace x2tap.View
             Config.InitFromFile();
 
             // 检查 TUN/TAP 适配器
-            if (TUNTAP.GetComponentId() == "") MessageBox.Show("未检测到 TUN/TAP 适配器，请检查 TAP-Windows 是否正确安装！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (TUNTAP.GetComponentId() == "")
+            {
+                MessageBox.Show("未检测到 TUN/TAP 适配器，请检查 TAP-Windows 是否正确安装！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
             // 初始化代理
             InitProxies();
-            if (ProxyComboBox.Items.Count > 0) ProxyComboBox.SelectedIndex = 0;
+            if (ProxyComboBox.Items.Count > 0)
+            {
+                ProxyComboBox.SelectedIndex = 0;
+            }
 
             // 初始化模式
             ModeComboBox.SelectedIndex = 0;
@@ -141,7 +154,10 @@ namespace x2tap.View
 
                     var brush = new SolidBrush(cbx.ForeColor);
 
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected) brush = SystemBrushes.HighlightText as SolidBrush;
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                    {
+                        brush = SystemBrushes.HighlightText as SolidBrush;
+                    }
 
                     e.Graphics.DrawString(cbx.Items[e.Index].ToString(), cbx.Font, brush, e.Bounds, sf);
                 }
@@ -168,16 +184,26 @@ namespace x2tap.View
                 ProxyComboBox.Items.RemoveAt(index);
 
                 if (index < Global.v2rayProxies.Count)
+                {
                     Global.v2rayProxies.RemoveAt(index);
+                }
                 else
+                {
                     Global.ShadowsocksProxies.RemoveAt(index - Global.v2rayProxies.Count);
+                }
 
                 if (ProxyComboBox.Items.Count < index)
+                {
                     ProxyComboBox.SelectedIndex = index;
+                }
                 else if (ProxyComboBox.Items.Count == 1)
+                {
                     ProxyComboBox.SelectedIndex = 0;
+                }
                 else
+                {
                     ProxyComboBox.SelectedIndex = index - 1;
+                }
             }
             else
             {
@@ -190,9 +216,13 @@ namespace x2tap.View
             if (ProxyComboBox.SelectedIndex != -1)
             {
                 if (ProxyComboBox.SelectedIndex < Global.v2rayProxies.Count)
+                {
                     (Global.Views.Server.v2ray = new Server.v2ray(true, ProxyComboBox.SelectedIndex)).Show();
+                }
                 else
+                {
                     (Global.Views.Server.Shadowsocks = new Shadowsocks(true, ProxyComboBox.SelectedIndex - Global.v2rayProxies.Count)).Show();
+                }
 
                 Hide();
             }

@@ -36,7 +36,10 @@ namespace x2tap.View
 
                     var brush = new SolidBrush(cbx.ForeColor);
 
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected) brush = SystemBrushes.HighlightText as SolidBrush;
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                    {
+                        brush = SystemBrushes.HighlightText as SolidBrush;
+                    }
 
                     e.Graphics.DrawString(cbx.Items[e.Index].ToString(), cbx.Font, brush, e.Bounds, sf);
                 }

@@ -40,7 +40,10 @@ namespace IniParser.Parser
             var iniData = Configuration.CaseInsensitive ? new IniDataCaseInsensitive() : new IniData();
             iniData.Configuration = Configuration.Clone();
 
-            if (string.IsNullOrEmpty(iniDataString)) return iniData;
+            if (string.IsNullOrEmpty(iniDataString))
+            {
+                return iniData;
+            }
 
             _errorExceptions.Clear();
             _currentCommentListTemp.Clear();
@@ -53,7 +56,10 @@ namespace IniParser.Parser
                 {
                     var line = lines[lineNumber];
 
-                    if (line.Trim() == string.Empty) continue;
+                    if (line.Trim() == string.Empty)
+                    {
+                        continue;
+                    }
 
                     try
                     {
@@ -63,7 +69,10 @@ namespace IniParser.Parser
                     {
                         var errorEx = new ParsingException(ex.Message, lineNumber + 1, line, ex);
                         if (Configuration.ThrowExceptionsOnError)
+                        {
                             throw errorEx;
+                        }
+
                         _errorExceptions.Add(errorEx);
                     }
                 }
@@ -73,13 +82,17 @@ namespace IniParser.Parser
                 {
                     // Check if there are actually sections in the file
                     if (iniData.Sections.Count > 0)
+                    {
                         iniData.Sections.GetSectionData(_currentSectionNameTemp).TrailingComments
                             .AddRange(_currentCommentListTemp);
+                    }
                     // No sections, put the comment in the last key value pair
                     // but only if the ini file contains at least one key-value pair
                     else if (iniData.Global.Count > 0)
+                    {
                         iniData.Global.GetLast().Comments
                             .AddRange(_currentCommentListTemp);
+                    }
 
 
                     _currentCommentListTemp.Clear();
@@ -88,11 +101,18 @@ namespace IniParser.Parser
             catch (Exception ex)
             {
                 _errorExceptions.Add(ex);
-                if (Configuration.ThrowExceptionsOnError) throw;
+                if (Configuration.ThrowExceptionsOnError)
+                {
+                    throw;
+                }
             }
 
 
-            if (HasError) return null;
+            if (HasError)
+            {
+                return null;
+            }
+
             return (IniData) iniData.Clone();
         }
 
@@ -121,9 +141,13 @@ namespace IniParser.Parser
         {
             // Check for duplicated keys
             if (keyDataCollection.ContainsKey(key))
+            {
                 HandleDuplicatedKeyInCollection(key, value, keyDataCollection, sectionName);
+            }
             else
+            {
                 keyDataCollection.AddKey(key, value);
+            }
 
             keyDataCollection.GetKeyData(key).Comments = _currentCommentListTemp;
             _currentCommentListTemp.Clear();
@@ -153,7 +177,9 @@ namespace IniParser.Parser
         public IniDataParser(IniParserConfiguration parserConfiguration)
         {
             if (parserConfiguration == null)
+            {
                 throw new ArgumentNullException("parserConfiguration");
+            }
 
             Configuration = parserConfiguration;
 
@@ -272,7 +298,10 @@ namespace IniParser.Parser
             currentLine = currentLine.Trim();
 
             // Extract comments from current line and store them in a tmp field
-            if (LineContainsAComment(currentLine)) currentLine = ExtractComment(currentLine);
+            if (LineContainsAComment(currentLine))
+            {
+                currentLine = ExtractComment(currentLine);
+            }
 
             // By default comments must span a complete line (i.e. the comment character
             // must be located at the beginning of a line, so it seems that the following
@@ -287,7 +316,9 @@ namespace IniParser.Parser
             // If the entire line was a comment now should be empty,
             // so no further processing is needed.
             if (currentLine == string.Empty)
+            {
                 return;
+            }
 
             //Process sections
             if (LineMatchesASection(currentLine))
@@ -304,7 +335,9 @@ namespace IniParser.Parser
             }
 
             if (Configuration.SkipInvalidLines)
+            {
                 return;
+            }
 
             throw new ParsingException(
                 "Unknown file format. Couldn't parse the line: '" + currentLine + "'.");
@@ -325,7 +358,10 @@ namespace IniParser.Parser
             sectionName = sectionName.Substring(1, sectionName.Length - 2).Trim();
 
             // Check that the section's name is not empty
-            if (sectionName == string.Empty) throw new ParsingException("Section name is empty");
+            if (sectionName == string.Empty)
+            {
+                throw new ParsingException("Section name is empty");
+            }
 
             // Temporally save section name.
             _currentSectionNameTemp = sectionName;
@@ -333,7 +369,10 @@ namespace IniParser.Parser
             //Checks if the section already exists
             if (currentIniData.Sections.ContainsSection(sectionName))
             {
-                if (Configuration.AllowDuplicateSections) return;
+                if (Configuration.AllowDuplicateSections)
+                {
+                    return;
+                }
 
                 throw new ParsingException(string.Format("Duplicate section with name '{0}' on line '{1}'", sectionName, line));
             }
@@ -358,14 +397,20 @@ namespace IniParser.Parser
             // get key and value data
             var key = ExtractKey(line);
 
-            if (string.IsNullOrEmpty(key) && Configuration.SkipInvalidLines) return;
+            if (string.IsNullOrEmpty(key) && Configuration.SkipInvalidLines)
+            {
+                return;
+            }
 
             var value = ExtractValue(line);
 
             // Check if we haven't read any section yet
             if (string.IsNullOrEmpty(_currentSectionNameTemp))
             {
-                if (!Configuration.AllowKeysWithoutSection) throw new ParsingException("key value pairs must be enclosed in a section");
+                if (!Configuration.AllowKeysWithoutSection)
+                {
+                    throw new ParsingException("key value pairs must be enclosed in a section");
+                }
 
                 AddKeyToKeyValueCollection(key, value, currentIniData.Global, "global");
             }
@@ -415,8 +460,14 @@ namespace IniParser.Parser
         protected virtual void HandleDuplicatedKeyInCollection(string key, string value, KeyDataCollection keyDataCollection, string sectionName)
         {
             if (!Configuration.AllowDuplicateKeys)
+            {
                 throw new ParsingException(string.Format("Duplicated key '{0}' found in section '{1}", key, sectionName));
-            if (Configuration.OverrideDuplicateKeys) keyDataCollection[key] = value;
+            }
+
+            if (Configuration.OverrideDuplicateKeys)
+            {
+                keyDataCollection[key] = value;
+            }
         }
 
         #endregion

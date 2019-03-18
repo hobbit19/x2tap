@@ -14,7 +14,11 @@ namespace x2tap.Utils
             var process = new Process();
             process.StartInfo.FileName = content[0];
             process.StartInfo.Arguments = "";
-            for (var i = 1; i < content.Length; i++) process.StartInfo.Arguments += " \"" + content[i] + "\"";
+            for (var i = 1; i < content.Length; i++)
+            {
+                process.StartInfo.Arguments += " \"" + content[i] + "\"";
+            }
+
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
 
@@ -36,7 +40,11 @@ namespace x2tap.Utils
             var process = new Process();
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.Arguments = "/c";
-            for (var i = 0; i < content.Length; i++) process.StartInfo.Arguments += " \"" + content[i] + "\"";
+            for (var i = 0; i < content.Length; i++)
+            {
+                process.StartInfo.Arguments += " \"" + content[i] + "\"";
+            }
+
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
 
@@ -58,7 +66,11 @@ namespace x2tap.Utils
             var process = new Process();
             process.StartInfo.FileName = content[0];
             process.StartInfo.Arguments = "";
-            for (var i = 0; i < content.Length; i++) process.StartInfo.Arguments += " \"" + content[i] + "\"";
+            for (var i = 0; i < content.Length; i++)
+            {
+                process.StartInfo.Arguments += " \"" + content[i] + "\"";
+            }
+
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
         }
@@ -72,7 +84,11 @@ namespace x2tap.Utils
             var process = new Process();
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.Arguments = "/c";
-            for (var i = 0; i < content.Length; i++) process.StartInfo.Arguments += " \"" + content[i] + "\"";
+            for (var i = 0; i < content.Length; i++)
+            {
+                process.StartInfo.Arguments += " \"" + content[i] + "\"";
+            }
+
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
         }

@@ -49,7 +49,10 @@ namespace IniParser.Model
         {
             Global.ClearComments();
 
-            foreach (var section in Sections) section.ClearComments();
+            foreach (var section in Sections)
+            {
+                section.ClearComments();
+            }
         }
 
         /// <summary>
@@ -62,7 +65,10 @@ namespace IniParser.Model
         /// </param>
         public void Merge(IniData toMergeIniData)
         {
-            if (toMergeIniData == null) return;
+            if (toMergeIniData == null)
+            {
+                return;
+            }
 
             Global.Merge(toMergeIniData.Global);
 
@@ -92,17 +98,23 @@ namespace IniParser.Model
         {
             value = string.Empty;
             if (string.IsNullOrEmpty(key))
+            {
                 return false;
+            }
 
             var splitKey = key.Split(SectionKeySeparator);
             var separatorCount = splitKey.Length - 1;
             if (separatorCount > 1)
+            {
                 throw new ArgumentException("key contains multiple separators", "key");
+            }
 
             if (separatorCount == 0)
             {
                 if (!Global.ContainsKey(key))
+                {
                     return false;
+                }
 
                 value = Global[key];
                 return true;
@@ -112,10 +124,15 @@ namespace IniParser.Model
             key = splitKey[1];
 
             if (!_sections.ContainsSection(section))
+            {
                 return false;
+            }
+
             var sectionData = _sections[section];
             if (!sectionData.ContainsKey(key))
+            {
                 return false;
+            }
 
             value = sectionData[key];
             return true;
@@ -147,7 +164,10 @@ namespace IniParser.Model
         private void MergeSection(SectionData otherSection)
         {
             // no overlap -> create no section
-            if (!Sections.ContainsSection(otherSection.SectionName)) Sections.AddSection(otherSection.SectionName);
+            if (!Sections.ContainsSection(otherSection.SectionName))
+            {
+                Sections.AddSection(otherSection.SectionName);
+            }
 
             // merge section into the new one
             Sections.GetSectionData(otherSection.SectionName).Merge(otherSection);
@@ -158,7 +178,10 @@ namespace IniParser.Model
         /// </summary>
         private void MergeGlobal(KeyDataCollection globals)
         {
-            foreach (var globalValue in globals) Global[globalValue.KeyName] = globalValue.Value;
+            foreach (var globalValue in globals)
+            {
+                Global[globalValue.KeyName] = globalValue.Value;
+            }
         }
 
         #region Initialization
@@ -213,7 +236,9 @@ namespace IniParser.Model
             {
                 // Lazy initialization
                 if (_configuration == null)
+                {
                     _configuration = new IniParserConfiguration();
+                }
 
                 return _configuration;
             }
@@ -237,10 +262,16 @@ namespace IniParser.Model
             get
             {
                 if (!_sections.ContainsSection(sectionName))
+                {
                     if (Configuration.AllowCreateSectionsOnFly)
+                    {
                         _sections.AddSection(sectionName);
+                    }
                     else
+                    {
                         return null;
+                    }
+                }
 
                 return _sections[sectionName];
             }

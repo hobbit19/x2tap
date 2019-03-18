@@ -30,20 +30,31 @@ namespace IniParser.Model.Configuration
                 || char.IsWhiteSpace(value)
                 || CommentString.Contains(new string(new[] {value}))
                 || value == KeyValueAssigmentChar)
+            {
                 throw new Exception(string.Format("Invalid character for section delimiter: '{0}", value));
+            }
 
             var builtRegexString = _strSectionRegexStart;
 
             if (_strSpecialRegexChars.Contains(new string(_sectionStartChar, 1)))
+            {
                 builtRegexString += "\\" + _sectionStartChar;
-            else builtRegexString += _sectionStartChar;
+            }
+            else
+            {
+                builtRegexString += _sectionStartChar;
+            }
 
             builtRegexString += _strSectionRegexMiddle;
 
             if (_strSpecialRegexChars.Contains(new string(_sectionEndChar, 1)))
+            {
                 builtRegexString += "\\" + _sectionEndChar;
+            }
             else
+            {
                 builtRegexString += _sectionEndChar;
+            }
 
             builtRegexString += _strSectionRegexEnd;
 
@@ -55,7 +66,10 @@ namespace IniParser.Model.Configuration
         public override int GetHashCode()
         {
             var hash = 27;
-            foreach (var property in GetType().GetProperties()) hash = hash * 7 + property.GetValue(this, null).GetHashCode();
+            foreach (var property in GetType().GetProperties())
+            {
+                hash = hash * 7 + property.GetValue(this, null).GetHashCode();
+            }
 
             return hash;
         }
@@ -63,14 +77,21 @@ namespace IniParser.Model.Configuration
         public override bool Equals(object obj)
         {
             var copyObj = obj as IniParserConfiguration;
-            if (copyObj == null) return false;
+            if (copyObj == null)
+            {
+                return false;
+            }
 
             var oriType = GetType();
             try
             {
                 foreach (var property in oriType.GetProperties())
+                {
                     if (property.GetValue(copyObj, null).Equals(property.GetValue(this, null)))
+                    {
                         return false;
+                    }
+                }
             }
             catch
             {
@@ -221,7 +242,10 @@ namespace IniParser.Model.Configuration
             set
             {
                 // Sanitarize special characters for a regex
-                foreach (var specialChar in _strSpecialRegexChars) value = value.Replace(new string(specialChar, 1), @"\" + specialChar);
+                foreach (var specialChar in _strSpecialRegexChars)
+                {
+                    value = value.Replace(new string(specialChar, 1), @"\" + specialChar);
+                }
 
                 CommentRegex = new Regex(string.Format(_strCommentRegex, value));
                 _commentString = value;
