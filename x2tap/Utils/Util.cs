@@ -11,7 +11,7 @@ namespace x2tap.Utils
         /// <returns>带单位的流量字符串</returns>
         public static string ComputeBandwidth(long bandwidth)
         {
-            string[] units = {"KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB", "BB", "DB"};
+            string[] units = {"KB", "MB", "GB", "TB", "PB"};
             double result;
             var i = -1;
 
