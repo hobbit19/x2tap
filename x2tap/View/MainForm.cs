@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using v2ray.Core.App.Stats.Command;
 using x2tap.Properties;
@@ -65,6 +67,12 @@ namespace x2tap.View
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // 初始化日志目录
+            if (!Directory.Exists("logging"))
+            {
+                Directory.CreateDirectory("logging");
+            }
+
             // 初始化配置
             Config.InitFromFile();
 
@@ -264,38 +272,102 @@ namespace x2tap.View
             {
                 if (ProxyComboBox.SelectedIndex != -1)
                 {
-                    ProxyComboBox.Enabled = false;
-                    ModeComboBox.Enabled = false;
-                    ControlButton.Text = "执行中";
-                    ControlButton.Enabled = false;
-
-                    Task.Run(() =>
+                    if (TUNTAP.GetComponentId() != "")
                     {
-                        Thread.Sleep(1000);
-                        Status = "正在生成配置文件中";
-                        Invoke(new MethodInvoker(() =>
+                        Status = "执行中";
+                        ProxyComboBox.Enabled = false;
+                        ModeComboBox.Enabled = false;
+                        ControlButton.Text = "执行中";
+                        ControlButton.Enabled = false;
+
+                        Task.Run(() =>
                         {
-                            if (ModeComboBox.SelectedIndex == 0)
+                            Thread.Sleep(1000);
+                            Status = "正在生成配置文件中";
+                            Invoke(new MethodInvoker(() =>
                             {
-                                File.WriteAllText("v2ray.txt", ProxyComboBox.Text.StartsWith("[v2ray]") ? v2rayConfig(Encoding.UTF8.GetString(Resources.v2rayWithBypassChina)) : ShadowsocksConfig(Encoding.UTF8.GetString(Resources.ShadowsocksWithBypassChina)));
+                                if (ModeComboBox.SelectedIndex == 0)
+                                {
+                                    File.WriteAllText("v2ray.txt", ProxyComboBox.Text.StartsWith("[v2ray]") ? v2rayConfig(Encoding.UTF8.GetString(Resources.v2rayWithBypassChina)) : ShadowsocksConfig(Encoding.UTF8.GetString(Resources.ShadowsocksWithBypassChina)));
+                                }
+                                else
+                                {
+                                    File.WriteAllText("v2ray.txt", ProxyComboBox.Text.StartsWith("[v2ray]") ? v2rayConfig(Encoding.UTF8.GetString(Resources.v2rayWithoutBypassChina)) : ShadowsocksConfig(Encoding.UTF8.GetString(Resources.ShadowsocksWithoutBypassChina)));
+                                }
+                            }));
+
+                            Thread.Sleep(1000);
+                            Status = "正在启动 v2ray 中";
+                            Shell.ExecuteCommandNoWait("start", "wv2ray.exe", "-config", "v2ray.txt");
+
+                            Thread.Sleep(2000);
+                            Status = "正在检查 v2ray 状态中";
+                            try
+                            {
+                                using (TcpClient client = new TcpClient())
+                                {
+                                    var task = client.BeginConnect("127.0.0.1", 2810, null, null);
+                                    if (!task.AsyncWaitHandle.WaitOne(1000))
+                                    {
+                                        throw new TimeoutException();
+                                    }
+
+                                    client.EndConnect(task);
+                                }
+
+                                Status = "v2ray 启动成功";
+                            }
+                            catch (Exception)
+                            {
+                                Status = "v2ray 启动失败";
+                                Invoke(new MethodInvoker(() =>
+                                {
+                                    ProxyComboBox.Enabled = true;
+                                    ModeComboBox.Enabled = true;
+                                    ControlButton.Text = "启动";
+                                    ControlButton.Enabled = true;
+                                }));
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
+                                MessageBox.Show("v2ray 启动失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
+                            Thread.Sleep(1000);
+                            Status = "正在启动 tun2socks 中";
+                            Shell.ExecuteCommandNoWait("start", "tun2socks.exe", "-enable-dns-cache", "-local-socks-addr", "127.0.0.1:2810", "-public-only", "-tun-address", "10.0.236.10", "-tun-mask", "255.255.255.0", "-tun-gw", "10.0.236.1");
+
+                            Thread.Sleep(2000);
+                            if (Process.GetProcessesByName("tun2socks").Length != 0)
+                            {
+                                Status = "tun2socks 启动成功";
                             }
                             else
                             {
-                                File.WriteAllText("v2ray.txt", ProxyComboBox.Text.StartsWith("[v2ray]") ? v2rayConfig(Encoding.UTF8.GetString(Resources.v2rayWithoutBypassChina)) : ShadowsocksConfig(Encoding.UTF8.GetString(Resources.ShadowsocksWithoutBypassChina)));
+                                Status = "tun2socks 启动失败";
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
+                                MessageBox.Show("tun2socks 启动失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
                             }
-                        }));
 
-                        Thread.Sleep(1000);
-                        Status = "已启动，请自行检查网络是否正常";
-                        Started = true;
-                        Invoke(new MethodInvoker(() =>
-                        {
-                            ProxyComboBox.Enabled = true;
-                            ModeComboBox.Enabled = true;
-                            ControlButton.Text = "停止";
-                            ControlButton.Enabled = true;
-                        }));
-                    });
+                            Thread.Sleep(1000);
+                            Status = "正在配置 路由表 中";
+
+                            Thread.Sleep(1000);
+                            Status = "已启动，请自行检查网络是否正常";
+                            Started = true;
+                            Invoke(new MethodInvoker(() =>
+                            {
+                                ProxyComboBox.Enabled = true;
+                                ModeComboBox.Enabled = true;
+                                ControlButton.Text = "停止";
+                                ControlButton.Enabled = true;
+                            }));
+                        });
+                    }
+                    else
+                    {
+                        MessageBox.Show("未检测到 TUN/TAP 适配器，请检查 TAP-Windows 是否正确安装！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
                 else
                 {
@@ -310,6 +382,9 @@ namespace x2tap.View
                 Task.Run(() =>
                 {
                     Thread.Sleep(1000);
+                    Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
+                    Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
+
                     Status = "已停止";
                     Started = false;
                     Invoke(new MethodInvoker(() =>

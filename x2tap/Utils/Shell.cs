@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows.Forms;
 using x2tap.Objects;
 
 namespace x2tap.Utils
@@ -39,11 +40,12 @@ namespace x2tap.Utils
         {
             var process = new Process();
             process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.Arguments = "/c";
+            process.StartInfo.Arguments = "/c \"";
             for (var i = 0; i < content.Length; i++)
             {
-                process.StartInfo.Arguments += " \"" + content[i] + "\"";
+                process.StartInfo.Arguments += " " + content[i];
             }
+            process.StartInfo.Arguments += "\"";
 
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
@@ -66,7 +68,7 @@ namespace x2tap.Utils
             var process = new Process();
             process.StartInfo.FileName = content[0];
             process.StartInfo.Arguments = "";
-            for (var i = 0; i < content.Length; i++)
+            for (var i = 1; i < content.Length; i++)
             {
                 process.StartInfo.Arguments += " \"" + content[i] + "\"";
             }
@@ -83,11 +85,12 @@ namespace x2tap.Utils
         {
             var process = new Process();
             process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.Arguments = "/c";
+            process.StartInfo.Arguments = "/c \"";
             for (var i = 0; i < content.Length; i++)
             {
-                process.StartInfo.Arguments += " \"" + content[i] + "\"";
+                process.StartInfo.Arguments += " " + content[i];
             }
+            process.StartInfo.Arguments += "\"";
 
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
