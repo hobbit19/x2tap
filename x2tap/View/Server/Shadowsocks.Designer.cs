@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.ShadowsocksConfigurationGroupBox = new System.Windows.Forms.GroupBox();
+            this.PasswordLabel = new System.Windows.Forms.Label();
+            this.PasswordTextBox = new System.Windows.Forms.TextBox();
             this.EncryptMethodComboBox = new System.Windows.Forms.ComboBox();
             this.EncryptMethodLabel = new System.Windows.Forms.Label();
             this.PortTextBox = new System.Windows.Forms.TextBox();
@@ -38,8 +40,6 @@
             this.RemarkLabel = new System.Windows.Forms.Label();
             this.PortLabel = new System.Windows.Forms.Label();
             this.ControlButton = new System.Windows.Forms.Button();
-            this.PasswordTextBox = new System.Windows.Forms.TextBox();
-            this.PasswordLabel = new System.Windows.Forms.Label();
             this.ShadowsocksConfigurationGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,6 +61,23 @@
             this.ShadowsocksConfigurationGroupBox.TabIndex = 0;
             this.ShadowsocksConfigurationGroupBox.TabStop = false;
             this.ShadowsocksConfigurationGroupBox.Text = "配置信息";
+            // 
+            // PasswordLabel
+            // 
+            this.PasswordLabel.AutoSize = true;
+            this.PasswordLabel.Location = new System.Drawing.Point(9, 109);
+            this.PasswordLabel.Name = "PasswordLabel";
+            this.PasswordLabel.Size = new System.Drawing.Size(44, 17);
+            this.PasswordLabel.TabIndex = 12;
+            this.PasswordLabel.Text = "密码：";
+            // 
+            // PasswordTextBox
+            // 
+            this.PasswordTextBox.Location = new System.Drawing.Point(69, 106);
+            this.PasswordTextBox.Name = "PasswordTextBox";
+            this.PasswordTextBox.Size = new System.Drawing.Size(344, 23);
+            this.PasswordTextBox.TabIndex = 11;
+            this.PasswordTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // EncryptMethodComboBox
             // 
@@ -153,22 +170,6 @@
             this.ControlButton.Text = "添加";
             this.ControlButton.UseVisualStyleBackColor = true;
             this.ControlButton.Click += new System.EventHandler(this.ControlButton_Click);
-            // 
-            // PasswordTextBox
-            // 
-            this.PasswordTextBox.Location = new System.Drawing.Point(69, 106);
-            this.PasswordTextBox.Name = "PasswordTextBox";
-            this.PasswordTextBox.Size = new System.Drawing.Size(344, 23);
-            this.PasswordTextBox.TabIndex = 11;
-            // 
-            // PasswordLabel
-            // 
-            this.PasswordLabel.AutoSize = true;
-            this.PasswordLabel.Location = new System.Drawing.Point(9, 109);
-            this.PasswordLabel.Name = "PasswordLabel";
-            this.PasswordLabel.Size = new System.Drawing.Size(44, 17);
-            this.PasswordLabel.TabIndex = 12;
-            this.PasswordLabel.Text = "密码：";
             // 
             // Shadowsocks
             // 

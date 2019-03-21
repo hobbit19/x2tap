@@ -86,7 +86,8 @@ namespace x2tap.View.Server
                     Remark = RemarkTextBox.Text,
                     Address = AddressTextBox.Text,
                     Port = int.Parse(PortTextBox.Text),
-                    EncryptMethod = EncryptMethodComboBox.SelectedIndex
+                    EncryptMethod = EncryptMethodComboBox.SelectedIndex,
+                    Password = PasswordTextBox.Text
                 };
 
                 MessageBox.Show("保存成功", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -98,7 +99,8 @@ namespace x2tap.View.Server
                     Remark = RemarkTextBox.Text,
                     Address = AddressTextBox.Text,
                     Port = int.Parse(PortTextBox.Text),
-                    EncryptMethod = EncryptMethodComboBox.SelectedIndex
+                    EncryptMethod = EncryptMethodComboBox.SelectedIndex,
+                    Password = PasswordTextBox.Text
                 });
 
                 MessageBox.Show("添加成功", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);

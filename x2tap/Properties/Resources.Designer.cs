@@ -69,5 +69,45 @@ namespace x2tap.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] ShadowsocksWithBypassChina {
+            get {
+                object obj = ResourceManager.GetObject("ShadowsocksWithBypassChina", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] ShadowsocksWithoutBypassChina {
+            get {
+                object obj = ResourceManager.GetObject("ShadowsocksWithoutBypassChina", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] v2rayWithBypassChina {
+            get {
+                object obj = ResourceManager.GetObject("v2rayWithBypassChina", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] v2rayWithoutBypassChina {
+            get {
+                object obj = ResourceManager.GetObject("v2rayWithoutBypassChina", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

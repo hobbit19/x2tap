@@ -1,0 +1,121 @@
+{
+	"stats": {},
+	"log": {
+		"access": "logging\\v2ray-access.log",
+		"error": "logging\\v2ray-error.log",
+		"loglevel": "v2rayLoggingLevel"
+	},
+	"api": {
+		"services": [
+			"StatsService"
+		]
+	},
+	"policy": {
+		"system": {
+			"statsInboundUplink": true,
+			"statsInboundDownlink": true
+		}
+	},
+	"dns": {
+		"clientIP": "AdapterAddress",
+		"hosts": {
+			"localhost": "127.0.0.1",
+			"domain:lan": "127.0.0.1",
+			"domain:arpa": "127.0.0.1",
+			"domain:local": "127.0.0.1"
+		},
+		"servers": [
+			"8.8.8.8"
+		]
+	},
+	"routing": {
+		"strategy": "rules",
+		"settings": {
+			"domainStrategy": "IPIfNonMatch",
+			"rules": [
+				{
+					"type": "field",
+					"inboundTag": [
+						"api"
+					],
+					"outboundTag": "api"
+				}
+			]
+		}
+	},
+	"inbounds": [
+		{
+			"listen": "127.0.0.1",
+			"port": 2810,
+			"protocol": "socks",
+			"settings": {
+				"udp": true
+			},
+			"sniffing": {
+				"enabled": false
+			},
+			"tag": "defaultInbound"
+		},
+		{
+			"listen": "127.0.0.1",
+			"port": 2811,
+			"protocol": "dokodemo-door",
+			"settings": {
+				"address": "127.0.0.1"
+			},
+			"tag": "api"
+		}
+	],
+	"outbounds": [
+		{
+			"sendThrough": "AdapterAddress",
+			"protocol": "vmess",
+			"settings": {
+				"vnext": [
+					{
+						"address": "v2rayAddress",
+						"port": v2rayPort,
+						"users": [
+							{
+								"id": "v2rayUserID",
+								"alterId": v2rayAlterID,
+								"security": "v2rayEncryptMethod"
+							}
+						]
+					}
+				]
+			},
+			"streamSettings": {
+				"network": "v2rayTransferProtocol",
+				"security": "v2rayTLSSecure",
+				"tcpSettings": {
+					"header": {
+						"type": "v2rayFakeType",
+						"request": {
+							"headers": {
+								"Host": "v2rayFakeDomain"
+							}
+						}
+					}
+				},
+				"kcpSettings": {
+					"header": {
+						"type": "v2rayFakeType"
+					}
+				},
+				"wsSettings": {
+					"path": "v2rayPath"
+				},
+				"httpSettings": {
+					"path": "v2rayPath"
+				},
+				"quicSettings": {
+					"header": {
+						"type": "v2rayFakeType"
+					}
+				}
+			},
+			"tag": "defaultOutbound"
+		}
+	]
+}

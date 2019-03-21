@@ -121,4 +121,16 @@
   <data name="defaultConfig" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\defaultConfig;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="ShadowsocksWithBypassChina" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShadowsocksWithBypassChina;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ShadowsocksWithoutBypassChina" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShadowsocksWithoutBypassChina;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="v2rayWithBypassChina" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\v2rayWithBypassChina;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="v2rayWithoutBypassChina" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\v2rayWithoutBypassChina;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

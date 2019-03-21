@@ -208,6 +208,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Resources\defaultConfig" />
+    <None Include="Resources\ShadowsocksWithBypassChina" />
+    <None Include="Resources\ShadowsocksWithoutBypassChina" />
+    <None Include="Resources\v2rayWithBypassChina" />
+    <None Include="Resources\v2rayWithoutBypassChina" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
