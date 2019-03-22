@@ -5,7 +5,7 @@
         /// <summary>
         ///     路由工具位置
         /// </summary>
-        public static string Location = "C:\\Windows\\System32\\route.exe";
+        public static string Location = "C:\\Windows\\System32\\ROUTE.EXE";
 
         /// <summary>
         ///     增加路由规则
@@ -36,9 +36,9 @@
         /// <param name="address">地址</param>
         /// <param name="metric">跃点数</param>
         /// <returns></returns>
-        public static bool ChangeMetricByAddress(string address, int metric)
+        public static bool Change(string address, string netmask, string gateway, int metric)
         {
-            return Shell.Execute(Location, "change", address, "metric", metric.ToString()).Ok;
+            return Shell.Execute(Location, "change", address, "mask", netmask, gateway, "metric", metric.ToString()).Ok;
         }
     }
 }

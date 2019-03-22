@@ -78,6 +78,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>x2tap.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Google.Protobuf, Version=3.7.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.7.0-rc.2\lib\net45\Google.Protobuf.dll</HintPath>
@@ -212,6 +215,7 @@
     <None Include="Resources\ShadowsocksWithoutBypassChina" />
     <None Include="Resources\v2rayWithBypassChina" />
     <None Include="Resources\v2rayWithoutBypassChina" />
+    <None Include="x2tap.manifest" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

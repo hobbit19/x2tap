@@ -12,13 +12,13 @@ namespace x2tap.Utils
         public static string ComputeBandwidth(long bandwidth)
         {
             string[] units = {"KB", "MB", "GB", "TB", "PB"};
-            double result;
+            double result = bandwidth;
             var i = -1;
 
-            while ((result = (double) bandwidth / 1024) < 1024)
+            do
             {
                 i++;
-            }
+            } while ((result /= 1024) > 1024);
 
             return string.Format("{0} {1}", Math.Round(result, 2), units[i]);
         }

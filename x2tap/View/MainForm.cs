@@ -3,13 +3,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using v2ray.Core.App.Stats.Command;
 using x2tap.Properties;
@@ -81,6 +81,11 @@ namespace x2tap.View
             {
                 MessageBox.Show("未检测到 TUN/TAP 适配器，请检查 TAP-Windows 是否正确安装！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            else
+            {
+                Application.Exit();
+                return;
+            }
 
             // 初始化代理
             InitProxies();
@@ -91,6 +96,45 @@ namespace x2tap.View
 
             // 初始化模式
             ModeComboBox.SelectedIndex = 0;
+
+            // 初始化适配器
+            Task.Run(() =>
+            {
+                using (var client = new UdpClient("114.114.114.114", 53))
+                {
+                    var address = ((IPEndPoint) client.Client.LocalEndPoint).Address;
+
+                    var addressGeted = false;
+
+                    var adapters = NetworkInterface.GetAllNetworkInterfaces();
+                    foreach (var adapter in adapters)
+                    {
+                        var properties = adapter.GetIPProperties();
+
+                        foreach (var information in properties.UnicastAddresses)
+                        {
+                            if (information.Address.AddressFamily == AddressFamily.InterNetwork && Equals(information.Address, address))
+                            {
+                                addressGeted = true;
+                            }
+                        }
+
+                        foreach (var information in properties.GatewayAddresses)
+                        {
+                            if (addressGeted)
+                            {
+                                Global.Config.adapterGateway = information.Address.ToString();
+                                break;
+                            }
+                        }
+
+                        if (addressGeted)
+                        {
+                            break;
+                        }
+                    }
+                }
+            });
 
             // 后台工作
             Task.Run(() =>
@@ -111,38 +155,47 @@ namespace x2tap.View
                         // 更新流量信息
                         if (Started)
                         {
-                            // 创建客户端实例
-                            var client = new StatsService.StatsServiceClient(new Channel("127.0.0.1:2811", ChannelCredentials.Insecure));
+                            var channel = new Channel("127.0.0.1:2811", ChannelCredentials.Insecure);
+                            var asyncTask = channel.ConnectAsync();
 
-                            // 获取并重置 上行/下行 统计信息
-                            var uplink = client.GetStats(new GetStatsRequest {Name = "inbound>>>defaultInbound>>>traffic>>>uplink", Reset = true});
-                            var downlink = client.GetStats(new GetStatsRequest {Name = "inbound>>>defaultInbound>>>traffic>>>downlink", Reset = true});
-
-                            // 加入总流量
-                            Bandwidth += uplink.Stat.Value;
-                            Bandwidth += downlink.Stat.Value;
-
-                            // 更新流量信息
-                            Invoke(new MethodInvoker(() =>
+                            asyncTask.Wait(100);
+                            if (asyncTask.IsCompleted)
                             {
-                                UsedBandwidthLabel.Text = string.Format("已使用：{0}", Util.ComputeBandwidth(Bandwidth));
-                                UplinkSpeedLabel.Text = string.Format("↑：{0}/s", Util.ComputeBandwidth(uplink.Stat.Value));
-                                DownlinkSpeedLabel.Text = string.Format("↓：{0}/s", Util.ComputeBandwidth(downlink.Stat.Value));
-                            }));
+                                // 创建客户端实例
+                                var client = new StatsService.StatsServiceClient(channel);
+
+                                // 获取并重置 上行/下行 统计信息
+                                var uplink = client.GetStats(new GetStatsRequest {Name = "inbound>>>defaultInbound>>>traffic>>>uplink", Reset = true});
+                                var downlink = client.GetStats(new GetStatsRequest {Name = "inbound>>>defaultInbound>>>traffic>>>downlink", Reset = true});
+
+                                // 加入总流量
+                                Bandwidth += uplink.Stat.Value;
+                                Bandwidth += downlink.Stat.Value;
+
+                                // 更新流量信息
+                                Invoke(new MethodInvoker(() =>
+                                {
+                                    UsedBandwidthLabel.Text = $"已使用：{Util.ComputeBandwidth(Bandwidth)}";
+                                    UplinkSpeedLabel.Text = $"↑：{Util.ComputeBandwidth(uplink.Stat.Value)}/s";
+                                    DownlinkSpeedLabel.Text = $"↓：{Util.ComputeBandwidth(downlink.Stat.Value)}/s";
+                                }));
+                            }
                         }
                         else
                         {
+                            Bandwidth = 0;
                             UsedBandwidthLabel.Text = "已使用：0 KB";
                             UplinkSpeedLabel.Text = "↑：0 KB/s";
                             DownlinkSpeedLabel.Text = "↓：0 KB/s";
                         }
+
+                        // 休眠 1000 毫秒
+                        Thread.Sleep(1000);
                     }
                     catch (Exception)
                     {
+                        // 跳过
                     }
-
-                    // 休眠 100 毫秒
-                    Thread.Sleep(100);
                 }
             });
         }
@@ -301,10 +354,9 @@ namespace x2tap.View
                             Shell.ExecuteCommandNoWait("start", "wv2ray.exe", "-config", "v2ray.txt");
 
                             Thread.Sleep(2000);
-                            Status = "正在检查 v2ray 状态中";
                             try
                             {
-                                using (TcpClient client = new TcpClient())
+                                using (var client = new TcpClient())
                                 {
                                     var task = client.BeginConnect("127.0.0.1", 2810, null, null);
                                     if (!task.AsyncWaitHandle.WaitOne(1000))
@@ -314,12 +366,10 @@ namespace x2tap.View
 
                                     client.EndConnect(task);
                                 }
-
-                                Status = "v2ray 启动成功";
                             }
                             catch (Exception)
                             {
-                                Status = "v2ray 启动失败";
+                                Status = "检测到 v2ray 启动失败";
                                 Invoke(new MethodInvoker(() =>
                                 {
                                     ProxyComboBox.Enabled = true;
@@ -328,37 +378,48 @@ namespace x2tap.View
                                     ControlButton.Enabled = true;
                                 }));
                                 Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
-                                MessageBox.Show("v2ray 启动失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("检测到 v2ray 启动失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
 
                             Thread.Sleep(1000);
                             Status = "正在启动 tun2socks 中";
-                            Shell.ExecuteCommandNoWait("start", "tun2socks.exe", "-enable-dns-cache", "-local-socks-addr", "127.0.0.1:2810", "-public-only", "-tun-address", "10.0.236.10", "-tun-mask", "255.255.255.0", "-tun-gw", "10.0.236.1");
+                            Shell.ExecuteCommandNoWait("start", "RunHiddenConsole.exe", "tun2socks.exe", "-enable-dns-cache", "-local-socks-addr", "127.0.0.1:2810", "-public-only", "-tun-address", "10.0.236.10", "-tun-mask", "255.255.255.0", "-tun-gw", "10.0.236.1");
 
                             Thread.Sleep(2000);
-                            if (Process.GetProcessesByName("tun2socks").Length != 0)
+                            if (Process.GetProcessesByName("tun2socks").Length == 0)
                             {
-                                Status = "tun2socks 启动成功";
-                            }
-                            else
-                            {
-                                Status = "tun2socks 启动失败";
+                                Status = "检测到 tun2socks 启动失败";
                                 Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
-                                MessageBox.Show("tun2socks 启动失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("检测到 tun2socks 启动失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
 
                             Thread.Sleep(1000);
                             Status = "正在配置 路由表 中";
+                            if (!Route.Change(Global.Config.adapterAddress, "0.0.0.0", Global.Config.adapterGateway, 1000))
+                            {
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
+                                MessageBox.Show("在操作路由表时发生错误！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
+                            if (!Route.Add("10.0.236.10", "255.255.255.0", "10.0.236.1", 100))
+                            {
+                                Route.Delete("10.0.236.10");
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
+                                MessageBox.Show("在操作路由表时发生错误！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
 
                             Thread.Sleep(1000);
                             Status = "已启动，请自行检查网络是否正常";
+                            Bandwidth = 0;
                             Started = true;
                             Invoke(new MethodInvoker(() =>
                             {
-                                ProxyComboBox.Enabled = true;
-                                ModeComboBox.Enabled = true;
                                 ControlButton.Text = "停止";
                                 ControlButton.Enabled = true;
                             }));
@@ -382,13 +443,23 @@ namespace x2tap.View
                 Task.Run(() =>
                 {
                     Thread.Sleep(1000);
+                    Status = "正在重置 路由表 中";
+                    Route.Delete("10.0.236.10");
+
+                    Thread.Sleep(1000);
+                    Status = "正在停止 tun2socks 中";
                     Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
+
+                    Thread.Sleep(1000);
+                    Status = "正在停止 v2ray 中";
                     Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
 
                     Status = "已停止";
                     Started = false;
                     Invoke(new MethodInvoker(() =>
                     {
+                        ProxyComboBox.Enabled = true;
+                        ModeComboBox.Enabled = true;
                         ControlButton.Text = "启动";
                         ControlButton.Enabled = true;
                     }));
@@ -568,10 +639,7 @@ namespace x2tap.View
             }
 
             // v2ray 出口绑定地址
-            using (var client = new UdpClient("114.114.114.114", 53))
-            {
-                text = text.Replace("AdapterAddress", ((IPEndPoint)client.Client.LocalEndPoint).Address.ToString());
-            }
+            text = text.Replace("AdapterAddress", Global.Config.adapterAddress);
 
             // Shadowsocks 地址
             text = text.Replace("ShadowsocksAddress", Global.ShadowsocksProxies[ProxyComboBox.SelectedIndex - Global.v2rayProxies.Count].Address);
@@ -607,7 +675,7 @@ namespace x2tap.View
                     text = text.Replace("ShadowsocksEncryptMethod", "aes-256-cfb");
                     break;
             }
-            
+
             // Shadowsocks 密码
             text = text.Replace("ShadowsocksPassword", Global.ShadowsocksProxies[ProxyComboBox.SelectedIndex - Global.v2rayProxies.Count].Password);
 

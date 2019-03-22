@@ -58,7 +58,20 @@ namespace x2tap
         /// </summary>
         public static class Config
         {
+            /// <summary>
+            ///     v2ray 日志等级
+            /// </summary>
             public static int v2rayLoggingLevel = 0;
+
+            /// <summary>
+            ///     适配器地址
+            /// </summary>
+            public static string adapterAddress = "";
+
+            /// <summary>
+            ///     适配器网关
+            /// </summary>
+            public static string adapterGateway = "";
 
             /// <summary>
             ///     TUN/TAP
