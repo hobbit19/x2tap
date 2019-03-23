@@ -5,7 +5,7 @@
         /// <summary>
         ///     路由工具位置
         /// </summary>
-        public static string Location = "C:\\Windows\\System32\\ROUTE.EXE";
+        public static string Location = "C:\\Windows\\System32\\route.exe";
 
         /// <summary>
         ///     增加路由规则
@@ -28,6 +28,18 @@
         public static bool Delete(string address)
         {
             return Shell.Execute(Location, "delete", address).Ok;
+        }
+
+        /// <summary>
+        /// 删除路由规则
+        /// </summary>
+        /// <param name="address">地址</param>
+        /// <param name="netmask">掩码</param>
+        /// <param name="gateway">网关</param>
+        /// <returns></returns>
+        public static bool Delete(string address, string netmask, string gateway)
+        {
+            return Shell.Execute(Location, "delete", address, "mask", netmask, gateway).Ok;
         }
 
         /// <summary>
