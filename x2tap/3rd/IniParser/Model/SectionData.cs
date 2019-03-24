@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+#pragma warning disable CS0618
+
 namespace IniParser.Model
 {
     /// <summary>

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using IniParser.Model.Configuration;
 
+#pragma warning disable CS0618
+
 namespace IniParser.Model.Formatting
 {
     public class DefaultIniDataFormatter : IIniDataFormatter

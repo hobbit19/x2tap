@@ -229,4 +229,43 @@
     <Error Condition="!Exists('..\packages\Grpc.Tools.1.19.0-pre1\build\Grpc.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grpc.Tools.1.19.0-pre1\build\Grpc.Tools.targets'))" />
   </Target>
   <Import Project="..\packages\Grpc.Tools.1.19.0-pre1\build\Grpc.Tools.targets" Condition="Exists('..\packages\Grpc.Tools.1.19.0-pre1\build\Grpc.Tools.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>@ECHO OFF
+ECHO 清理目标文件夹中
+RD /S /Q $(TargetDir)\logging &gt; NUL 2&gt;&amp;1
+DEL /F /S /Q $(TargetDir)\* &gt; NUL 2&gt;&amp;1
+
+ECHO 复制依赖文件中
+COPY $(SolutionDir)\binaries\prebuilt\geoip.dat $(TargetDir) &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\geosite.dat $(TargetDir) &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\v2ctl.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\v2ray.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\wv2ray.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\tun2socks.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\RunHiddenConsole.exe $(TargetDir) &gt; NUL 2&gt;&amp;1</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>@ECHO OFF
+IF "$(ConfigurationName)" == "Release" (
+ECHO 清理目标文件夹中
+RD /S /Q x2tap &gt; NUL 2&gt;&amp;1
+MKDIR x2tap &gt; NUL 2&gt;&amp;1
+ECHO 正在打包中
+COPY geoip.dat x2tap &gt; NUL 2&gt;&amp;1
+COPY geosite.dat x2tap &gt; NUL 2&gt;&amp;1
+COPY v2ctl.exe x2tap &gt; NUL 2&gt;&amp;1
+COPY v2ray.exe x2tap &gt; NUL 2&gt;&amp;1
+COPY wv2ray.exe x2tap &gt; NUL 2&gt;&amp;1
+COPY tun2socks.exe x2tap &gt; NUL 2&gt;&amp;1
+COPY Google.Protobuf.dll x2tap &gt; NUL 2&gt;&amp;1
+COPY Grpc.Core.Api.dll x2tap &gt; NUL 2&gt;&amp;1
+COPY Grpc.Core.dll x2tap &gt; NUL 2&gt;&amp;1
+COPY grpc_csharp_ext.$(PlatformName).dll x2tap &gt; NUL 2&gt;&amp;1
+COPY Newtonsoft.Json.dll x2tap &gt; NUL 2&gt;&amp;1
+COPY System.Interactive.Async.dll x2tap &gt; NUL 2&gt;&amp;1
+COPY x2tap.exe x2tap &gt; NUL 2&gt;&amp;1
+CD x2tap
+BC c -fmt:7z -l:9 x2tap.7z * &gt; NUL 2&gt;&amp;1
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>

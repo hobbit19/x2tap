@@ -5,6 +5,8 @@ using IniParser.Exceptions;
 using IniParser.Model;
 using IniParser.Model.Configuration;
 
+#pragma warning disable CS0618
+
 namespace IniParser.Parser
 {
     /// <summary>

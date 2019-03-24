@@ -374,7 +374,7 @@ namespace x2tap.View
 
                             Thread.Sleep(1000);
                             Status = "正在启动 tun2socks 中";
-                            Shell.ExecuteCommandNoWait("start", "RunHiddenConsole.exe", "tun2socks.exe", "-enable-dns-cache", "-local-socks-addr", "127.0.0.1:2810", "-public-only", "-tun-address", "10.0.236.10", "-tun-mask", "255.255.255.0", "-tun-gw", "10.0.236.1");
+                            Shell.ExecuteCommandNoWait("start", "RunHiddenConsole.exe", "tun2socks.exe", "-enable-dns-cache", "-local-socks-addr", "127.0.0.1:2810", "-public-only", "-tun-address", "10.0.236.10", "-tun-mask", "255.255.255.0", "-tun-gw", "10.0.236.1", "-tun-dns", "114.114.114.114,114.114.115.115");
 
                             Thread.Sleep(2000);
                             if (Process.GetProcessesByName("tun2socks").Length == 0)
