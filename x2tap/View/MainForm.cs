@@ -387,25 +387,9 @@ namespace x2tap.View
 
                             Thread.Sleep(1000);
                             Status = "正在配置 路由表 中";
-                            if (!Route.Change("0.0.0.0", "0.0.0.0", Global.Config.adapterGateway, 1000))
+                            if (!Route.Add("0.0.0.0", "128.0.0.0", "10.0.236.1"))
                             {
-                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
-                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
-                                Status = "在操作路由表时发生错误！";
-                                Invoke(new MethodInvoker(() =>
-                                {
-                                    ProxyComboBox.Enabled = true;
-                                    ModeComboBox.Enabled = true;
-                                    ControlButton.Text = "启动";
-                                    ControlButton.Enabled = true;
-                                }));
-                                MessageBox.Show("在操作路由表时发生错误！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
-
-                            if (!Route.Add("0.0.0.0", "0.0.0.0", "10.0.236.1", 100))
-                            {
-                                Route.Delete("0.0.0.0", "0.0.0.0", "10.0.236.1");
+                                Route.Delete("0.0.0.0", "128.0.0.0", "10.0.236.1");
                                 Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
                                 Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
                                 Status = "在操作路由表时发生错误！";
@@ -450,7 +434,7 @@ namespace x2tap.View
                 {
                     Thread.Sleep(1000);
                     Status = "正在重置 路由表 中";
-                    Route.Delete("0.0.0.0", "0.0.0.0", "10.0.236.1");
+                    Route.Delete("0.0.0.0", "128.0.0.0", "10.0.236.1");
 
                     Thread.Sleep(1000);
                     Status = "正在停止 tun2socks 中";

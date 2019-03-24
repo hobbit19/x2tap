@@ -13,6 +13,18 @@
         /// <param name="address">地址</param>
         /// <param name="netmask">掩码</param>
         /// <param name="gateway">网关</param>
+        /// <returns></returns>
+        public static bool Add(string address, string netmask, string gateway)
+        {
+            return Shell.Execute(Location, "add", address, "mask", netmask, gateway).Ok;
+        }
+
+        /// <summary>
+        ///     增加路由规则
+        /// </summary>
+        /// <param name="address">地址</param>
+        /// <param name="netmask">掩码</param>
+        /// <param name="gateway">网关</param>
         /// <param name="metric">跃点数</param>
         /// <returns></returns>
         public static bool Add(string address, string netmask, string gateway, int metric)
