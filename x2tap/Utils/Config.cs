@@ -47,10 +47,10 @@ namespace x2tap.Utils
             var parser = new FileIniDataParser();
             var data = parser.ReadFile("x2tap.ini");
             data["x2tap"]["v2rayLoggingLevel"] = Global.Config.v2rayLoggingLevel.ToString();
-            data["x2tap"]["Address"] = Global.Config.TUNTAP.Address;
-            data["x2tap"]["Netmask"] = Global.Config.TUNTAP.Netmask;
-            data["x2tap"]["Gateway"] = Global.Config.TUNTAP.Gateway;
-            data["x2tap"]["Metric"] = Global.Config.TUNTAP.Metric.ToString();
+            data["TUNTAP"]["Address"] = Global.Config.TUNTAP.Address;
+            data["TUNTAP"]["Netmask"] = Global.Config.TUNTAP.Netmask;
+            data["TUNTAP"]["Gateway"] = Global.Config.TUNTAP.Gateway;
+            data["TUNTAP"]["Metric"] = Global.Config.TUNTAP.Metric.ToString();
             parser.WriteFile("x2tap.ini", data);
 
             File.WriteAllText("v2ray.json", JsonConvert.SerializeObject(Global.v2rayProxies));

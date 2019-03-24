@@ -257,6 +257,7 @@ COPY v2ctl.exe x2tap &gt; NUL 2&gt;&amp;1
 COPY v2ray.exe x2tap &gt; NUL 2&gt;&amp;1
 COPY wv2ray.exe x2tap &gt; NUL 2&gt;&amp;1
 COPY tun2socks.exe x2tap &gt; NUL 2&gt;&amp;1
+COPY RunHiddenConsole.exe x2tap &gt; NUL 2&gt;&amp;1
 COPY Google.Protobuf.dll x2tap &gt; NUL 2&gt;&amp;1
 COPY Grpc.Core.Api.dll x2tap &gt; NUL 2&gt;&amp;1
 COPY Grpc.Core.dll x2tap &gt; NUL 2&gt;&amp;1
