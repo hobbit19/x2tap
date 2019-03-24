@@ -1,12 +1,13 @@
 # x2tap
 基于 TUN/TAP、tun2socks、v2ray 实现的 VPN 工具
 
-**仍在开发中（完成度：未知。学校，没空搞）**
+**第一个版本已发布于 [releases](https://github.com/hacking001/x2tap/releases) 中**
+**如果打开提示缺失 TAP-Windows，请看底下的依赖，下载并安装**
 
 支持 Shadowsocks 和 VMess 协议的代理（通过 v2ray 实现）
 # TODO
 - [x] 导入订阅（Shadowsocks、VMess）
-- [x] 流量信息显示（v2ray gRPC API）
+- [x] 流量信息显示（通过 v2ray gRPC API 获取的）
 - [ ] C# tun2socks
 - [ ] 外置规则列表
 - [ ] 本地 DNS 代理
