@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System.IO;
+using Microsoft.Win32;
 
 namespace x2tap.Utils
 {
@@ -44,6 +45,20 @@ namespace x2tap.Utils
             var registry = Registry.LocalMachine.OpenSubKey(string.Format("{0}\\{1}\\Connection", NETWORK_KEY, componentId));
 
             return registry.GetValue("Name", "").ToString();
+        }
+
+        /// <summary>
+        ///     创建 TUN/TAP 适配器
+        /// </summary>
+        /// <returns></returns>
+        public static bool Create()
+        {
+            if (File.Exists("tapinstall.exe"))
+            {
+                return Shell.Execute("tapinstall.exe", "install", "driver\\OemVista.inf", "tap0901").Ok;
+            }
+
+            return false;
         }
     }
 }

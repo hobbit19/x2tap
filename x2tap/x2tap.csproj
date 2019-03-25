@@ -232,8 +232,16 @@
   <PropertyGroup>
     <PreBuildEvent>@ECHO OFF
 ECHO 清理目标文件夹中
+RD /S /Q $(TargetDir)\driver &gt; NUL 2&gt;&amp;1
 RD /S /Q $(TargetDir)\logging &gt; NUL 2&gt;&amp;1
 DEL /F /S /Q $(TargetDir)\* &gt; NUL 2&gt;&amp;1
+
+ECHO 复制 TUN/TAP 驱动中
+MKDIR driver
+COPY $(SolutionDir)\binaries\prebuilt\TAP-Windows\tapinstall.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\TAP-Windows\OemVista.inf $(TargetDir)\driver &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\TAP-Windows\tap0901.cat $(TargetDir)\driver &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\TAP-Windows\tap0901.sys $(TargetDir)\driver &gt; NUL 2&gt;&amp;1
 
 ECHO 复制依赖文件中
 COPY $(SolutionDir)\binaries\prebuilt\geoip.dat $(TargetDir) &gt; NUL 2&gt;&amp;1

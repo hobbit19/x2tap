@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Windows.Forms;
 using x2tap.Objects;
 
 namespace x2tap.Utils
@@ -45,6 +44,7 @@ namespace x2tap.Utils
             {
                 process.StartInfo.Arguments += " " + content[i];
             }
+
             process.StartInfo.Arguments += "\"";
 
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
