@@ -31,7 +31,7 @@ namespace x2tap.View
         public bool Started;
 
         /// <summary>
-        ///     装填信息
+        ///     状态信息
         /// </summary>
         public string Status = "请下达命令！";
 
@@ -235,7 +235,7 @@ namespace x2tap.View
             Hide();
         }
 
-        private void AddShadowsocksButton_Click(object sender, EventArgs e)
+        private void AddShadowsocksServerButton_Click(object sender, EventArgs e)
         {
             (Global.Views.Server.Shadowsocks = new Shadowsocks()).Show();
             Hide();
@@ -320,6 +320,12 @@ namespace x2tap.View
                         Status = "执行中";
                         ProxyComboBox.Enabled = false;
                         ModeComboBox.Enabled = false;
+                        Addv2rayServerButton.Enabled = false;
+                        AddShadowsocksServerButton.Enabled = false;
+                        DeleteButton.Enabled = false;
+                        EditButton.Enabled = false;
+                        SubscribeButton.Enabled = false;
+                        AdvancedButton.Enabled = false;
                         ControlButton.Text = "执行中";
                         ControlButton.Enabled = false;
 
@@ -364,6 +370,12 @@ namespace x2tap.View
                                 {
                                     ProxyComboBox.Enabled = true;
                                     ModeComboBox.Enabled = true;
+                                    Addv2rayServerButton.Enabled = true;
+                                    AddShadowsocksServerButton.Enabled = true;
+                                    DeleteButton.Enabled = true;
+                                    EditButton.Enabled = true;
+                                    SubscribeButton.Enabled = true;
+                                    AdvancedButton.Enabled = true;
                                     ControlButton.Text = "启动";
                                     ControlButton.Enabled = true;
                                 }));
@@ -387,7 +399,52 @@ namespace x2tap.View
 
                             Thread.Sleep(1000);
                             Status = "正在配置 路由表 中";
-                            if (!Route.Add("0.0.0.0", "128.0.0.0", "10.0.236.1"))
+                            if (!Route.Change("0.0.0.0", "0.0.0.0", Global.Config.adapterGateway, 500))
+                            {
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
+                                Status = "在操作路由表时发生错误！";
+                                Invoke(new MethodInvoker(() =>
+                                {
+                                    ProxyComboBox.Enabled = true;
+                                    ModeComboBox.Enabled = true;
+                                    Addv2rayServerButton.Enabled = true;
+                                    AddShadowsocksServerButton.Enabled = true;
+                                    DeleteButton.Enabled = true;
+                                    EditButton.Enabled = true;
+                                    SubscribeButton.Enabled = true;
+                                    AdvancedButton.Enabled = true;
+                                    ControlButton.Text = "启动";
+                                    ControlButton.Enabled = true;
+                                }));
+                                MessageBox.Show("在操作路由表时发生错误！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                            
+                            if (!Route.Add("0.0.0.0", "0.0.0.0", "10.0.236.1", 1))
+                            {
+                                Route.Delete("0.0.0.0", "0.0.0.0", "10.0.236.1");
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
+                                Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "tun2socks.exe");
+                                Status = "在操作路由表时发生错误！";
+                                Invoke(new MethodInvoker(() =>
+                                {
+                                    ProxyComboBox.Enabled = true;
+                                    ModeComboBox.Enabled = true;
+                                    Addv2rayServerButton.Enabled = true;
+                                    AddShadowsocksServerButton.Enabled = true;
+                                    DeleteButton.Enabled = true;
+                                    EditButton.Enabled = true;
+                                    SubscribeButton.Enabled = true;
+                                    AdvancedButton.Enabled = true;
+                                    ControlButton.Text = "启动";
+                                    ControlButton.Enabled = true;
+                                }));
+                                MessageBox.Show("在操作路由表时发生错误！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
+                            if (!Route.Add("0.0.0.0", "128.0.0.0", "10.0.236.1", 1))
                             {
                                 Route.Delete("0.0.0.0", "128.0.0.0", "10.0.236.1");
                                 Shell.ExecuteCommandNoWait("taskkill", "/f", "/t", "/im", "wv2ray.exe");
@@ -397,6 +454,12 @@ namespace x2tap.View
                                 {
                                     ProxyComboBox.Enabled = true;
                                     ModeComboBox.Enabled = true;
+                                    Addv2rayServerButton.Enabled = true;
+                                    AddShadowsocksServerButton.Enabled = true;
+                                    DeleteButton.Enabled = true;
+                                    EditButton.Enabled = true;
+                                    SubscribeButton.Enabled = true;
+                                    AdvancedButton.Enabled = true;
                                     ControlButton.Text = "启动";
                                     ControlButton.Enabled = true;
                                 }));
@@ -417,7 +480,7 @@ namespace x2tap.View
                     }
                     else
                     {
-                        MessageBox.Show("未检测到 TUN/TAP 适配器，请检查 TAP-Windows 是否正确安装！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("未检测到 TUN/TAP 适配器，请检查 TAP-Windows 驱动是否正确安装！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
@@ -450,6 +513,12 @@ namespace x2tap.View
                     {
                         ProxyComboBox.Enabled = true;
                         ModeComboBox.Enabled = true;
+                        Addv2rayServerButton.Enabled = true;
+                        AddShadowsocksServerButton.Enabled = true;
+                        DeleteButton.Enabled = true;
+                        EditButton.Enabled = true;
+                        SubscribeButton.Enabled = true;
+                        AdvancedButton.Enabled = true;
                         ControlButton.Text = "启动";
                         ControlButton.Enabled = true;
                     }));

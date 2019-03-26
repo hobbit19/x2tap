@@ -81,6 +81,9 @@
   <PropertyGroup>
     <ApplicationManifest>x2tap.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>v2ray.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Google.Protobuf, Version=3.7.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.7.0-rc.2\lib\net45\Google.Protobuf.dll</HintPath>
@@ -217,7 +220,9 @@
     <None Include="Resources\v2rayWithoutBypassChina" />
     <None Include="x2tap.manifest" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="v2ray.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Grpc.Core.1.19.0-pre1\build\net45\Grpc.Core.targets" Condition="Exists('..\packages\Grpc.Core.1.19.0-pre1\build\net45\Grpc.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -232,55 +237,65 @@
   <PropertyGroup>
     <PreBuildEvent>@ECHO OFF
 ECHO 清理目标文件夹中
-RD /S /Q $(TargetDir)\driver &gt; NUL 2&gt;&amp;1
-RD /S /Q $(TargetDir)\logging &gt; NUL 2&gt;&amp;1
-DEL /F /S /Q $(TargetDir)\* &gt; NUL 2&gt;&amp;1
+RD /S /Q $(TargetDir)\driver &gt; NUL
+RD /S /Q $(TargetDir)\logging &gt; NUL
+DEL /F /S /Q $(TargetDir)\* &gt; NUL
 
 ECHO 复制 TUN/TAP 驱动中
 MKDIR driver
-COPY $(SolutionDir)\binaries\prebuilt\TAP-Windows\tapinstall.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\TAP-Windows\OemVista.inf $(TargetDir)\driver &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\TAP-Windows\tap0901.cat $(TargetDir)\driver &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\TAP-Windows\tap0901.sys $(TargetDir)\driver &gt; NUL 2&gt;&amp;1
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\tapinstall.exe $(TargetDir) &gt; NUL
+IF "$(PlatformName)" == "x64" (
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\OemVista.inf $(TargetDir)\driver &gt; NUL
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\OemWin2k.inf $(TargetDir)\driver &gt; NUL
+) else (
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\OemWin2k.inf $(TargetDir)\driver\OemVista.inf &gt; NUL
+)
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\tap0901.cat $(TargetDir)\driver &gt; NUL
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\tap0901.sys $(TargetDir)\driver &gt; NUL
 
 ECHO 复制依赖文件中
-COPY $(SolutionDir)\binaries\prebuilt\geoip.dat $(TargetDir) &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\geosite.dat $(TargetDir) &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\v2ctl.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\v2ray.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\wv2ray.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\tun2socks.exe $(TargetDir) &gt; NUL 2&gt;&amp;1
-COPY $(SolutionDir)\binaries\prebuilt\RunHiddenConsole.exe $(TargetDir) &gt; NUL 2&gt;&amp;1</PreBuildEvent>
+COPY $(SolutionDir)\binaries\prebuilt\geoip.dat $(TargetDir) &gt; NUL
+COPY $(SolutionDir)\binaries\prebuilt\geosite.dat $(TargetDir) &gt; NUL
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\v2ctl.exe $(TargetDir) &gt; NUL
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\v2ray.exe $(TargetDir) &gt; NUL
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\wv2ray.exe $(TargetDir) &gt; NUL
+COPY $(SolutionDir)\binaries\prebuilt\$(PlatformName)\tun2socks.exe $(TargetDir) &gt; NUL
+COPY $(SolutionDir)\binaries\prebuilt\RunHiddenConsole.exe $(TargetDir) &gt; NUL</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>@ECHO OFF
 IF "$(ConfigurationName)" == "Release" (
 ECHO 清理目标文件夹中
-RD /S /Q x2tap &gt; NUL 2&gt;&amp;1
-MKDIR x2tap &gt; NUL 2&gt;&amp;1
-MKDIR x2tap\driver &gt; NUL 2&gt;&amp;1
+RD /S /Q x2tap &gt; NUL
+MKDIR x2tap &gt; NUL
+MKDIR x2tap\driver &gt; NUL
 
 ECHO 正在打包中
-COPY tapinstall.exe x2tap &gt; NUL 2&gt;&amp;1
-COPY driver\OemVista.inf x2tap\driver &gt; NUL 2&gt;&amp;1
-COPY driver\tap0901.cat x2tap\driver &gt; NUL 2&gt;&amp;1
-COPY driver\tap0901.sys x2tap\driver &gt; NUL 2&gt;&amp;1
-COPY geoip.dat x2tap &gt; NUL 2&gt;&amp;1
-COPY geosite.dat x2tap &gt; NUL 2&gt;&amp;1
-COPY v2ctl.exe x2tap &gt; NUL 2&gt;&amp;1
-COPY v2ray.exe x2tap &gt; NUL 2&gt;&amp;1
-COPY wv2ray.exe x2tap &gt; NUL 2&gt;&amp;1
-COPY tun2socks.exe x2tap &gt; NUL 2&gt;&amp;1
-COPY RunHiddenConsole.exe x2tap &gt; NUL 2&gt;&amp;1
-COPY Google.Protobuf.dll x2tap &gt; NUL 2&gt;&amp;1
-COPY Grpc.Core.Api.dll x2tap &gt; NUL 2&gt;&amp;1
-COPY Grpc.Core.dll x2tap &gt; NUL 2&gt;&amp;1
-COPY grpc_csharp_ext.$(PlatformName).dll x2tap &gt; NUL 2&gt;&amp;1
-COPY Newtonsoft.Json.dll x2tap &gt; NUL 2&gt;&amp;1
-COPY System.Interactive.Async.dll x2tap &gt; NUL 2&gt;&amp;1
-COPY x2tap.exe x2tap &gt; NUL 2&gt;&amp;1
+COPY tapinstall.exe x2tap &gt; NUL
+IF "$(PlatformName)" == "x64" (
+COPY driver\OemVista.inf x2tap\driver &gt; NUL
+COPY driver\OemWin2k.inf x2tap\driver &gt; NUL
+) else (
+COPY driver\OemVista.inf x2tap\driver &gt; NUL
+)
+COPY driver\tap0901.cat x2tap\driver &gt; NUL
+COPY driver\tap0901.sys x2tap\driver &gt; NUL
+COPY geoip.dat x2tap &gt; NUL
+COPY geosite.dat x2tap &gt; NUL
+COPY v2ctl.exe x2tap &gt; NUL
+COPY v2ray.exe x2tap &gt; NUL
+COPY wv2ray.exe x2tap &gt; NUL
+COPY tun2socks.exe x2tap &gt; NUL
+COPY RunHiddenConsole.exe x2tap &gt; NUL
+COPY Google.Protobuf.dll x2tap &gt; NUL
+COPY Grpc.Core.Api.dll x2tap &gt; NUL
+COPY Grpc.Core.dll x2tap &gt; NUL
+COPY grpc_csharp_ext.$(PlatformName).dll x2tap &gt; NUL
+COPY Newtonsoft.Json.dll x2tap &gt; NUL
+COPY System.Interactive.Async.dll x2tap &gt; NUL
+COPY x2tap.exe x2tap &gt; NUL
 CD x2tap
-BC c -r -fmt:7z -l:9 x2tap.$(PlatformName).7z * &gt; NUL 2&gt;&amp;1
+BC c -r -fmt:7z -l:9 x2tap.$(PlatformName).7z * &gt; NUL
 )</PostBuildEvent>
   </PropertyGroup>
 </Project>

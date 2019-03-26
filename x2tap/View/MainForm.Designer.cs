@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.v2rayConfigurationGroupBox = new System.Windows.Forms.GroupBox();
             this.Addv2rayServerButton = new System.Windows.Forms.Button();
-            this.AddShadowsocksButton = new System.Windows.Forms.Button();
+            this.AddShadowsocksServerButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.EditButton = new System.Windows.Forms.Button();
             this.SubscribeButton = new System.Windows.Forms.Button();
@@ -53,7 +54,7 @@
             // v2rayConfigurationGroupBox
             // 
             this.v2rayConfigurationGroupBox.Controls.Add(this.Addv2rayServerButton);
-            this.v2rayConfigurationGroupBox.Controls.Add(this.AddShadowsocksButton);
+            this.v2rayConfigurationGroupBox.Controls.Add(this.AddShadowsocksServerButton);
             this.v2rayConfigurationGroupBox.Controls.Add(this.DeleteButton);
             this.v2rayConfigurationGroupBox.Controls.Add(this.EditButton);
             this.v2rayConfigurationGroupBox.Controls.Add(this.SubscribeButton);
@@ -78,15 +79,15 @@
             this.Addv2rayServerButton.UseVisualStyleBackColor = true;
             this.Addv2rayServerButton.Click += new System.EventHandler(this.Addv2rayServerButton_Click);
             // 
-            // AddShadowsocksButton
+            // AddShadowsocksServerButton
             // 
-            this.AddShadowsocksButton.Location = new System.Drawing.Point(265, 78);
-            this.AddShadowsocksButton.Name = "AddShadowsocksButton";
-            this.AddShadowsocksButton.Size = new System.Drawing.Size(173, 23);
-            this.AddShadowsocksButton.TabIndex = 7;
-            this.AddShadowsocksButton.Text = "添加 [Shadowsocks] 服务器";
-            this.AddShadowsocksButton.UseVisualStyleBackColor = true;
-            this.AddShadowsocksButton.Click += new System.EventHandler(this.AddShadowsocksButton_Click);
+            this.AddShadowsocksServerButton.Location = new System.Drawing.Point(265, 78);
+            this.AddShadowsocksServerButton.Name = "AddShadowsocksServerButton";
+            this.AddShadowsocksServerButton.Size = new System.Drawing.Size(173, 23);
+            this.AddShadowsocksServerButton.TabIndex = 7;
+            this.AddShadowsocksServerButton.Text = "添加 [Shadowsocks] 服务器";
+            this.AddShadowsocksServerButton.UseVisualStyleBackColor = true;
+            this.AddShadowsocksServerButton.Click += new System.EventHandler(this.AddShadowsocksServerButton_Click);
             // 
             // DeleteButton
             // 
@@ -242,6 +243,7 @@
             this.Controls.Add(this.v2rayConfigurationGroupBox);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.Name = "MainForm";
@@ -266,7 +268,7 @@
         private System.Windows.Forms.ComboBox ModeComboBox;
         private System.Windows.Forms.Label ModeLabel;
         private System.Windows.Forms.Button Addv2rayServerButton;
-        private System.Windows.Forms.Button AddShadowsocksButton;
+        private System.Windows.Forms.Button AddShadowsocksServerButton;
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button EditButton;
         private System.Windows.Forms.Button SubscribeButton;
