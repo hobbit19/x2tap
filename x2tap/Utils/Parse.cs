@@ -32,6 +32,9 @@ namespace x2tap.Utils
                 case "h2":
                     v2ray.TransferProtocol = 3;
                     break;
+                case "quic":
+                    v2ray.TransferProtocol = 4;
+                    break;
                 default:
                     v2ray.TransferProtocol = 0;
                     break;

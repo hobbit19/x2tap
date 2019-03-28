@@ -178,7 +178,8 @@
             "TCP",
             "mKCP",
             "WebSockets",
-            "HTTP/2"});
+            "HTTP/2",
+            "QUIC"});
             this.TransferProtocolComboBox.Location = new System.Drawing.Point(212, 106);
             this.TransferProtocolComboBox.Name = "TransferProtocolComboBox";
             this.TransferProtocolComboBox.Size = new System.Drawing.Size(199, 24);
